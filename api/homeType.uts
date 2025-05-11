@@ -1,0 +1,36 @@
+// export type MyObject {
+//      code: number;
+//      data: Data;
+//      msg?: any;
+// };
+export type BannerList_type {
+     image: string;
+     title: string;
+};
+
+export type BannerList_Data_type {
+     bannerList: Array<BannerList_type>;
+};
+
+
+
+
+// export type MyObject {
+//      code: number;
+//      data: Array<Data>;
+//      msg?: any;
+// };
+
+export type HomeList_Type {
+     id: number;
+     title: string;
+     img: string;
+     tag: Array<string>;
+     isDot: string;
+     dot: boolean;
+     introduce: string;
+     times: string;
+     isPlay: boolean;
+     address: Array<string>;
+};
+

@@ -1,0 +1,188 @@
+<template>
+	<view>
+		<view class="content">
+			<uv-search placeholder="请输入搜索内容" v-model="keyword"></uv-search>
+			<uv-swiper style="margin-top: 20rpx;" v-if="bannerList.length" :list="bannerList" keyName="image" showTitle
+				radius="8" :title-style="{color:'red',textAlign: 'center'}" :autoplay="true" height="160"
+				circular></uv-swiper>
+			<uv-notice-bar text="项目数据仅为演示, 非真实数据"></uv-notice-bar>
+
+			<uv-waterfall ref="waterfall" v-model="flowList" :add-time="10" :column-gap="10" @changeList="changeList">
+				<template v-slot:list1>
+					<view>
+						<view class="demo-water" v-for="item, index in dataList.list1">
+							<uv-image :width="item.width" :src="item.img" mode="widthFix" radius="10"></uv-image>
+							<view class="demo-box">
+								<view class="demo-title">
+									{{item.title}}
+								</view>
+								<view class="demo-price">
+									{{item.times}}
+								</view>
+								<view class="demo-tag">
+									<view class="demo-tag-owner">
+										{{item.tag[0]}}
+									</view>
+									<view class="demo-tag-text">
+										{{item.tag[1]}}
+									</view>
+
+								</view>
+							</view>
+							<view class="isDot" v-if="item.isDot">{{item.isDot}}</view>
+						</view>
+					</view>
+				</template>
+				<template v-slot:list2>
+					<view>
+						<view class="demo-water" v-for="item, index in dataList.list2">
+							<uv-image :width="item.width" :src="item.img" width="widthFix" radius="10"></uv-image>
+							<view class="demo-box">
+								<view class="demo-title">
+									{{item.title}}
+								</view>
+								<view class="demo-price">
+									{{item.times}}
+								</view>
+								<view class="demo-tag">
+									<view class="demo-tag-owner">
+										{{item.tag[0]}}
+									</view>
+									<view class="demo-tag-text">
+										{{item.tag[1]}}
+									</view>
+
+								</view>
+							</view>
+							<view class="isDot" v-if="item.isDot">{{item.isDot}}</view>
+						</view>
+					</view>
+				</template>
+			</uv-waterfall>
+
+		</view>
+
+
+	</view>
+</template>
+
+<script setup>
+	import { getBanner, getHomeList } from '../../api/api';
+	import { BannerList_Data_type, BannerList_type, HomeList_Type } from '../../api/homeType.uts'
+	const keyword = ref('')
+	// 轮播图
+	// 后端返回的数据整体替换会丢失响应式，所以需要用ref而不是reactive
+	// ref默认是一个泛型参数
+	const bannerList = ref<BannerList_type[]>([])
+	// 景点数据
+	const flowList = ref<HomeList_Type[]>([])
+	// 非接口返回数据使用reactive
+	const dataList = reactive({
+		list1: [],
+		list2: [],
+	})
+
+	onLoad(() => {
+		getBanner().then((res : BannerList_Data_type) => {
+			console.log(res, 'page')
+			bannerList.value = res.bannerList
+
+		})
+
+		getHomeList().then((res : HomeList_Type[]) => {
+			console.log('getHomeList: ', res)
+			flowList.value = res
+			console.log('flowList.value: ', flowList.value)
+		})
+	})
+
+	const changeList = (e : UTSJSONObject) => {
+		dataList[e.name].push(e.value)
+	}
+
+	// 触底事件
+	onReachBottom(() => {
+		console.log('触底事件')
+		addData()
+	})
+	const addData = () => {
+		for (let i = 0; i < 10; i++) {
+			const index = uni.$uv.random(0, flowList.value.length - 1)
+			let item = JSON.parse(JSON.stringify(flowList.value[index]))
+			item.id = uni.$uv.guid()
+			flowList.value.push(item)
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.content {
+		padding: 20rpx 20rpx;
+		background-color: #f0f0f0;
+	}
+
+	.demo-water {
+		border-radius: 10px 10px 0 0;
+		margin-bottom: 10rpx;
+		background-color: #fff;
+		position: relative;
+
+		.demo-box {
+			padding: 0 10rpx 10rpx 20rpx;
+
+			.demo-title {
+				font-size: 30rpx;
+				margin-top: 10rpx;
+				color: #303133;
+			}
+
+			.demo-price {
+				font-size: 24rpx;
+				color: #777;
+				margin-top: 10rpx;
+			}
+		}
+
+		.demo-tag {
+			display: flex;
+			// uni 默认主轴是纵向的，需要定义为横线
+			flex-direction: row;
+			margin-top: 10rpx;
+
+			.demo-tag-owner {
+				border: 1px solid #fca381;
+				color: #ffaa00;
+				font-size: 20rpx;
+				display: flex;
+				align-items: center;
+				padding: 4rpx 14rpx;
+				border-radius: 50rpx;
+			}
+
+			.demo-tag-text {
+				border: 1px solid #00aaff;
+				color: #00aaff;
+				margin-left: 20rpx;
+				border-radius: 50rpx;
+				padding: 4rpx 14rpx;
+				font-size: 20rpx;
+				display: flex;
+				align-items: center;
+			}
+		}
+
+	}
+
+	.isDot {
+		position: absolute;
+		top: 20rpx;
+		right: 20rpx;
+		font-size: 24rpx;
+		color: #fff;
+		line-height: 32rpx;
+		background-color: #ff0000;
+		text-align: center;
+		border-radius: 10rpx;
+		padding: 4rpx 10rpx;
+	}
+</style>
