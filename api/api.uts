@@ -22,3 +22,13 @@ export const getUserInfo = () => {
 export const detailProject = () => {
 	return http('/detail/project')
 }
+
+// 获取游玩详情
+export const projectInfo = (data) => {
+	return http('/project/info', data)
+}
+
+// 我的喜欢
+export const likeList = () => {
+	return http('/like/list')
+}

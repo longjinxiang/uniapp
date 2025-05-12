@@ -27,6 +27,13 @@
 				"navigationBarTitleText" : "景点详情",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path" : "pages/line/line",
+			"style" : 
+			{
+				"navigationBarTitleText" : "游玩详情"
+			}
 		}
 	],
 	"tabBar": {

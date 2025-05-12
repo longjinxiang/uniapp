@@ -13,7 +13,12 @@
 		"setting": {
 			"urlCheck": false
 		},
-		"usingComponents": true
+		"usingComponents": true,
+		"permission": {
+			"scope.userLocation": {
+				"desc": "获取用户信息"
+			}
+		}
 	},
 	"mp-alipay": {
 		"usingComponents": true

@@ -43,3 +43,27 @@ export type projectList_type = {
   title: string;
   desc: string;
 };
+
+
+type Markers$1 = {
+  id: number;
+  latitude: number;
+  longitude: number;
+  width: number;
+  height: number;
+};
+
+type Other$2 = {
+  id: number;
+  name: string;
+  url: string;
+};
+
+export type projectInfo_type = {
+  id: number;
+  location: Array< number >;
+  title: string;
+  count: number;
+  markers: Array< Markers$1 >;
+  other: Array< Other$2 >;
+};

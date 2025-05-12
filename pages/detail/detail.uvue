@@ -60,7 +60,11 @@
 	// 游玩项目数据
 	const projectList = ref<projectList_type[]>([])
 
-	const goLine = (item) => { }
+	const goLine = (item:projectList_type) => {
+		uni.navigateTo({
+			url: `/pages/line/line?id=${item.id}`
+		})
+	}
 
 	onLoad((opt : { item : string }) => {
 		console.log(opt, 'item')
