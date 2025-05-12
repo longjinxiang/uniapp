@@ -1,5 +1,12 @@
 <template>
 	<view class="content">
+		<view class="test">
+			<uni-list>
+				<uni-list-item  title="列表文字" ></uni-list-item>
+				<uni-list-item :disabled="true" title="列表禁用状态" ></uni-list-item>
+			</uni-list>
+
+		</view>
 		<view class="top-box">
 			<view class="set-box">
 				<view class="set-flex">
@@ -11,18 +18,19 @@
 					<uni-icons type="chat" size="30" color="#fff"></uni-icons>
 				</view>
 			</view>
-			<view class="users">
-				<!-- 条件渲染 -->					
-					<view class="u-top">
-				<template v-if="!userInfo.nickName">
+			<view class="user">
+				<!-- 条件渲染 -->
+				<view class="u-top" @click="setFunc">
+					<template v-if="!userInfo.nickName">
 						<image src="/static/tt.jpg"></image>
 						<view class="tit">注册 / 登录</view>
-				</template>
-				
-				<template v-else>					
-					<image :src="userInfo.avatarUrl"></image>
-					<view class="tit">{{userInfo.nickName}}</view>
-				</template>
+					</template>
+
+					<template v-else>
+						<image :src="userInfo.avatarUrl"></image>
+						<view class="tit">{{userInfo.nickName}}</view>
+					</template>
+				</view>
 				<view class="u-bottom">
 					<view class="u-item">
 						<view class="num">12</view>
@@ -41,17 +49,82 @@
 						<view class="u-tit">收藏</view>
 					</view>
 				</view>
-				</view>
 			</view>
 		</view>
+
+
+		<view class="listBox">
+			<uni-list>
+			 	<uni-list-item :show-extra-icon="true" :extra-icon="extraIcon1" showArrow title="个人信息" clickable></uni-list-item>
+			 	<uni-list-item :show-extra-icon="true" :extra-icon="extraIcon2" showArrow title="我的购物车" clickable></uni-list-item>
+			 	<uni-list-item :show-extra-icon="true" :extra-icon="extraIcon3" showArrow title="用户反馈" clickable></uni-list-item>
+			 	<uni-list-item :show-extra-icon="true" :extra-icon="extraIcon4" showArrow title="我的邮件" clickable></uni-list-item>
+			 	<uni-list-item :show-extra-icon="true" :extra-icon="extraIcon5" showArrow title="分享有礼" clickable></uni-list-item>
+			</uni-list>
+
+		</view>		
 	</view>
 </template>
 
 <script setup>
-	let userInfo = reactive({
-		nikeName: '',
+	import { getUserInfo, login } from '../../api/api'
+
+	const userInfo = reactive({
+		nickName: '',
 		avatarUrl: '',
 	})
+	const extraIcon1 = reactive({
+		color: '#666',
+		size: '22',
+		type: 'auth'
+	})
+	const extraIcon2 = reactive({
+		color: '#666',
+		size: '22',
+		type: 'cart'
+	})
+	const extraIcon3 = reactive({
+		color: '#666',
+		size: '22',
+		type: 'chatboxes'
+	})
+	const extraIcon4 = reactive({
+		color: '#666',
+		size: '22',
+		type: 'email'
+	})
+	const extraIcon5 = reactive({
+		color: '#666',
+		size: '22',
+		type: 'gift'
+	})
+	
+	// 用户授权
+	const setFunc = () => {
+		// 确认弹窗
+		uni.showModal({
+			title: '温馨提示',
+			content: '亲， 授权微信登录后才能正常使用小程序',
+			success(res) {
+				if(res.confirm) {
+					uni.login({
+						success: async (data) => {
+							console.log(data)
+							const {token} = await login(data.code) as UTSJSONObject
+							
+							console.log(token, 'token')
+							// 缓存token
+							uni.setStorageSync('token', token)
+							const {avatarUrl, nickName} = await getUserInfo() as UTSJSONObject
+							userInfo.avatarUrl = avatarUrl
+							userInfo.nickName = nickName
+						}
+					})
+				}
+			}
+			
+		})
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -80,24 +153,28 @@
 			border-radius: 0 0 50% 50%;
 			z-index: -1;
 		}
-		.set-box{
+
+		.set-box {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
-			.set-flex{
+
+			.set-flex {
 				width: 18%;
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
 				align-items: center;
-				.txt{
+
+				.txt {
 					color: #fff;
 					font-size: 30rpx;
 				}
 			}
 		}
-		.user{
+
+		.user {
 			margin-top: 35rpx;
 			padding: 30rpx;
 			box-sizing: border-box;
@@ -105,43 +182,55 @@
 			background-color: #fff;
 			box-shadow: 1px 10rpx 20rpx #ececec;
 			border-radius: 16rpx;
+
 			.u-top {
 				display: flex;
 				flex-direction: row;
 				justify-content: flex-start;
 				align-items: center;
-				margin-top: 30rpx;
-				image{
-					width: 100rpx; 
+				margin-bottom: 30rpx;
+
+				image {
+					width: 100rpx;
 					height: 100rpx;
 					border-radius: 50%;
 					margin-right: 20rpx;
 				}
-				.tit{
+
+				.tit {
 					font-size: 30rpx;
 					font-weight: 700;
 					color: #333;
 				}
 			}
-			.u-bottom{
+
+			.u-bottom {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-around;
 				align-items: center;
 				.u-item {
 					text-align: center;
-					u-tit{
+
+					.u-tit {
 						color: #757575;
 						font-size: 26rpx;
 						margin-top: 10rpx;
 					}
-					.num{
+
+					.num {
 						color: #000;
 						font-size: 33rpx;
 						font-weight: 700;
 					}
 				}
 			}
+		}
+		
+		.listBox {
+			padding: 20rpx;
+			box-sizing: border-box;
+			border-radius: 12rpx;
 		}
 	}
 </style>

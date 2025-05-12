@@ -32,15 +32,15 @@
 			"selectedIconPath": "static/tabbar/index_HL.png",
 			"text": "首页"
 		}, {
-			"pagePath": "pages/like/index",
+			"pagePath": "pages/like/like",
 			"iconPath": "static/tabbar/like.png",
 			"selectedIconPath": "static/tabbar/like_HL.png",
-			"text": "接口"
+			"text": "喜欢"
 		}, {
-			"pagePath": "pages/mine/index",
+			"pagePath": "pages/my/my",
 			"iconPath": "static/tabbar/mine.png",
 			"selectedIconPath": "static/tabbar/mine_HL.png",
-			"text": "接口"
+			"text": "我的"
 		}]
 	},
 	"globalStyle": {

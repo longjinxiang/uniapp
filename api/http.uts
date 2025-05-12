@@ -8,6 +8,8 @@ export default function http(url:string, data={}, method='GET') {
 			data，
 			method: method,
 			header:{
+				"token": uni.getStorageSync('token') || ''
+				
 			},
 			success: res => {
 				console.log(res, 'res')
