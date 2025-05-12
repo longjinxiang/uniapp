@@ -10,7 +10,7 @@
 			<uv-waterfall ref="waterfall" v-model="flowList" :add-time="10" :column-gap="10" @changeList="changeList">
 				<template v-slot:list1>
 					<view>
-						<view class="demo-water" v-for="item, index in dataList.list1">
+						<view class="demo-warter" v-for="(item, index) in dataList.list1" @click="goDetail(item)">
 							<uv-image :width="item.width" :src="item.img" mode="widthFix" radius="10"></uv-image>
 							<view class="demo-box">
 								<view class="demo-title">
@@ -35,7 +35,7 @@
 				</template>
 				<template v-slot:list2>
 					<view>
-						<view class="demo-water" v-for="item, index in dataList.list2">
+						<view class="demo-warter" v-for="(item, index) in dataList.list2" @click="goDetail(item)">
 							<uv-image :width="item.width" :src="item.img" width="widthFix" radius="10"></uv-image>
 							<view class="demo-box">
 								<view class="demo-title">
@@ -51,7 +51,6 @@
 									<view class="demo-tag-text">
 										{{item.tag[1]}}
 									</view>
-
 								</view>
 							</view>
 							<view class="isDot" v-if="item.isDot">{{item.isDot}}</view>
@@ -81,6 +80,14 @@
 		list1: [],
 		list2: [],
 	})
+	
+	const goDetail = (item: HomeList_Type) => {
+		// console.log('item: ', item)
+		const can = JSON.stringify(item)
+		uni.navigateTo({
+			url: `/pages/detail/detail?item=${encodeURIComponent(can)}`
+		})
+	}
 
 	onLoad(() => {
 		getBanner().then((res : BannerList_Data_type) => {
@@ -121,7 +128,7 @@
 		background-color: #f0f0f0;
 	}
 
-	.demo-water {
+	.demo-warter {
 		border-radius: 10px 10px 0 0;
 		margin-bottom: 10rpx;
 		background-color: #fff;

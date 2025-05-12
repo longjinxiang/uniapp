@@ -34,3 +34,12 @@ export type HomeList_Type {
      address: Array<string>;
 };
 
+
+
+export type projectList_type = {
+  id: number;
+  url: string;
+  tag: string;
+  title: string;
+  desc: string;
+};

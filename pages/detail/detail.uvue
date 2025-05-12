@@ -1,0 +1,179 @@
+<template>
+	<view class="detail">
+		<uv-navbar title="景点详情" bg-color="#00000000" left-icon-color="#fff" :autoBack="true"></uv-navbar>
+		<view class="d-con">
+			<image :src="details.dt.img" mode="aspectFill"></image>
+			<view class="d-content">
+				<view class="j-con">
+					<view style="display:flex;flex-direction:row" class="tit">
+						<text>{{details.dt.title}}</text>
+						<uv-tags text="5A级风景区" size="mini" shape="circle"></uv-tags>
+					</view>
+					<view class="jj">
+						<view style="font-weight:700;font-size:14px">
+							景点介绍
+						</view>
+						<view class="nr">
+							{{details.dt.introduce}}
+						</view>
+						<view class="j-con">
+							<view class="jj">
+								<text style="font-weight:700;font-size:14px">开放时间: </text>
+								<text class="nr">{{details.dt.times}}</text>
+							</view>
+						</view>
+
+						<view class="j-con ls">
+							<view class="tit" style="font-size:17px">游玩推荐</view>
+							<view class="jj tj-list">
+								<view class="item" v-for="(item, index) in projectList" :key="index"
+									@click="goLine(item)">
+									<image :src="item.url" mode="aspectFill"></image>
+									<view class="topFixed">{{item.tag}}</view>
+									<view class="infos">
+										<view class="tit">
+											{{item.title}}
+										</view>
+										<view class="desc">
+											<uni-icons type="location" color="#9c9c9c" size="16"></uni-icons>
+											<text class="text">{{item.desc}}</text>
+										</view>
+									</view>
+								</view>
+							</view>
+						</view>
+
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script setup>
+	import { detailProject } from '../../api/api'
+	import { projectList_type } from '../../api/homeType'
+
+	const details = reactive({
+		dt: {}
+	})
+	// 游玩项目数据
+	const projectList = ref<projectList_type[]>([])
+
+	const goLine = (item) => { }
+
+	onLoad((opt : { item : string }) => {
+		console.log(opt, 'item')
+		const datailData = JSON.parse(decodeURIComponent(opt.item))
+		details.dt = datailData
+		console.log(datailData, 'detailData')
+
+		detailProject().then((res : projectList_type[]) => {
+			// console.log(res, 'detailProject')
+			projectList.value = res
+		})
+	})
+</script>
+
+<style lang="scss" scoped>
+	.detail {
+		background-color: #f5f5f5;
+
+		.d-con {
+			image {
+				width: 100%;
+				height: 600rpx;
+			}
+
+			.d-content {
+				width: 100%;
+				margin-top: -40rpx;
+				background-color: #fff;
+				padding: 35rpx 30rpx;
+				box-sizing: border-box;
+				border-radius: 0 30rpx;
+				position: relative;
+				z-index: 9;
+			}
+
+			.j-con {
+				margin-bottom: 30rpx;
+
+				.tit {
+					font-size: 36rpx;
+					font-weight: 700;
+					color: #111;
+					margin-bottom: 10rpx;
+				}
+
+				.jj {
+					.nr {
+						font-size: 26rpx;
+						color: #8a8a8a;
+						line-height: 40rpx;
+					}
+				}
+
+				.tj-list {
+					display: flex;
+					// 超出内容换行
+					flex-wrap: wrap;
+					justify-content: space-between;
+					flex-direction: row;
+
+					.item {
+						position: relative;
+						width: 48%;
+						margin-bottom: 20rpx;
+						box-shadow: 1px 2px 3px #e5e5e5;
+						border-top-left-radius: 20rpx;
+						border-bottom-right-radius: 20rpx;
+						overflow: hidden;
+
+						.topFixed {
+							position: absolute;
+							top: 0;
+							left: 0;
+							border-top-left-radius: 20rpx;
+							border-bottom-right-radius: 20rpx;
+							background-color: #ffaa7f;
+							color: #fff;
+							font-size: 22rpx;
+							padding: 5rpx 20rpx;
+							box-sizing: border-box;
+						}
+
+						image {
+							width: 100%;
+							height: 200rpx;
+						}
+					}
+
+					.infos {
+						padding: 10rpx 15rpx;
+
+						.tit {
+							font-size: 28rpx;
+							font-weight: 700;
+							color: #111;
+							margin-bottom: 15rpx;
+							text-overflow: ellipsis;
+						}
+
+						.desc {
+							display: flex;
+							justify-content: flex-start;
+							align-items: center;
+							flex-direction: row;
+
+							.text {
+								font-size: 26rpx;
+								color: #8a8a8a;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+</style>
